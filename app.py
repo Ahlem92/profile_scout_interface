@@ -11,10 +11,11 @@ from streamlit_extras.app_logo import add_logo
 
 st.title("PROFILE SCOUT")
 
+df = pd.read_csv('Fifa23_data (1).csv')
 
 with st.sidebar:
     with st.form(key='params_for_api'):
-        player_name = st.text_input('Enter the name of the reference player', "Ex: Lionel Messi")
+        player_name = st.selectbox('Select a player', df['Full Name'])
         number_of_similar_profiles = st.number_input('Number of similar player', 5)
 
         submit_button = st.form_submit_button(label ='Get Similar Players')
@@ -28,25 +29,75 @@ if submit_button:
     number_of_similar_profiles=number_of_similar_profiles)
 
 
-    profile_scout_api_url = 'https://y-snwo4rgu6a-ew.a.run.app/get_profiles'
+    profile_scout_api_url = 'https://profilescout-snwo4rgu6a-ew.a.run.app/get_profiles'
     response = requests.get(profile_scout_api_url, params=params)
     results = response.json()
 
     df2 = pd.read_json(json.dumps(results), orient ='index')
     df = df2.T
-    select = ['Similar Players','Value(in Euro)',"Positions Played",'Image Link','Age','Club Name','Contract Until','National Team Image Link', ]
+    select = ['Similar Players','Value(in Euro)',"Positions Played", 'Best Position', 'Image Link','Age','Club Name','Contract Until','National Team Image Link', ]
 
     py_results = df[select]
 
     st.header(f'Here are {number_of_similar_profiles} Similar players of {player_name}')
     st.write(py_results)
 
-
-    col1, col2 = st.columns(2)
+    st.header(py_results.index[0])
+    col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
-        st.header(py_results.index[0])
-        st.write(py_results["Value(in Euro)"].loc[py_results.index[0]])
-        st.image(py_results['Image Link'].loc[py_results.index[0]])
+        st.write(f'{py_results["Value(in Euro)"].loc[py_results.index[0]]} €')
+        st.image(py_results['Image Link'].loc[py_results.index[0]], width=70)
+
+    with col2:
+        st.write(py_results["Positions Played"].loc[py_results.index[0]])
+        st.write(py_results["Best Position"].loc[py_results.index[0]])
+        st.image(py_results['National Team Image Link'].loc[py_results.index[0]])
+
+    with col3:
+        st.write(py_results["Age"].loc[py_results.index[0]])
+        st.write(py_results["Club Name"].loc[py_results.index[0]])
+        st.write(py_results['Contract Until'].loc[py_results.index[0]])
+
+    with st.form(key='Similare players'):
+
+        i = 1
+        # for i in range(1, number_of_similar_profiles+1):
+        button_clicker = st.selectbox('Select a player', py_results.index)
+
+        submit_button_2 = st.form_submit_button(label ='Similar Players')
+
+        if submit_button_2:
+            params = dict(
+            player_name=player_name,
+            number_of_similar_profiles=number_of_similar_profiles)
+
+
+            profile_scout_api_url = 'https://profilescout-snwo4rgu6a-ew.a.run.app/get_profiles'
+            response = requests.get(profile_scout_api_url, params=params)
+            results = response.json()
+
+            df2 = pd.read_json(json.dumps(results), orient ='index')
+            df = df2.T
+            select = ['Similar Players','Value(in Euro)',"Positions Played", 'Best Position', 'Image Link','Age','Club Name','Contract Until','National Team Image Link', ]
+
+            py_results = df[select]
+
+            col1, col2, col3 = st.columns([1, 1, 2])
+            st.write(py_results.index[i])
+            with col1:
+                st.write(f'{py_results["Value(in Euro)"].loc[py_results.index[i]]} €')
+                st.image(py_results['Image Link'].loc[py_results.index[i]], width=70)
+
+            with col2:
+                st.write(py_results["Positions Played"].loc[py_results.index[i]])
+                st.write(py_results["Best Position"].loc[py_results.index[i]])
+                st.image(py_results['National Team Image Link'].loc[py_results.index[i]])
+
+            with col3:
+                st.write(py_results["Age"].loc[py_results.index[i]])
+                st.write(py_results["Club Name"].loc[py_results.index[i]])
+                st.write(py_results['Contract Until'].loc[py_results.index[i]])
+
 
 
         #st.image()
