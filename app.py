@@ -11,7 +11,7 @@ from streamlit_extras.app_logo import add_logo
 
 st.title("PROFILE SCOUT")
 
-df = pd.read_csv('Fifa23_data (1).csv')
+df = pd.read_csv('Fifa23_data.csv')
 
 with st.sidebar:
     with st.form(key='params_for_api'):
