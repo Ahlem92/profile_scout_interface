@@ -42,9 +42,13 @@ if submit_button:
     st.write(py_results)
 
 
-col1, col2 = st.columns(2)
-with col1:
-        st.header(df[])
+    col1, col2 = st.columns(2)
+    with col1:
+        st.header(py_results.index[0])
+        st.write(py_results["Value(in Euro)"].loc[py_results.index[0]])
+        st.image(py_results['Image Link'].loc[py_results.index[0]])
+
+
         #st.image()
         #st.write(f"{player_name}")
         #st.write(position)
