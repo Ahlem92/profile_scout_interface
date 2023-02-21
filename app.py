@@ -1,34 +1,23 @@
-
+import requests
+import pandas as pd
 import streamlit as st
 
+st.header("Profile Scout Generator")
+with st.form(key='params_for_api'):
 
-st.markdown('''
-## Test
-''')
+    player_name = st.text_input('Player full name')
+    number_of_similar_profiles = st.number_input('Number of similar profiles',1,step=1)
 
-'''
-## Here we would like to add some controllers in order to ask the user to select the player
+    st.form_submit_button(f"Get similar profiles")
 
-1. Let's ask for:
-- player full name
+params = dict(
+    player_name=player_name,
+    number_of_similar_profiles=number_of_similar_profiles)
 
-'''
+profile_scout_api_url = 'https://y-snwo4rgu6a-ew.a.run.app/get_profiles'
+response = requests.get(profile_scout_api_url, params=params)
 
-'''
-## Once we have these, let's call our API in order to retrieve a prediction
+prediction = response.json()
+profiles=st.dataframe(pd.DataFrame(prediction))
 
-See ? No need to load a `model.joblib` file in this app, we do not even need to know anything about Data Science in order to retrieve a prediction...
-
-🤔 How could we call our API ? Off course... The `requests` package 💡
-'''
-
-'''
-
-2. Let's build a dictionary containing the parameters for our API...
-
-3. Let's call our API using the `requests` package...
-
-4. Let's retrieve the prediction from the **JSON** returned by the API...
-
-## Finally, we can display the prediction to the user
-'''
+st.header(profiles)
