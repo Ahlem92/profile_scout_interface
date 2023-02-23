@@ -13,7 +13,7 @@ def page_profile():
 
     st.title("_PROFILE SCOUT_ :soccer:")
 
-    df = pd.read_csv('Fifa23_data (1).csv')
+    df = pd.read_csv('Fifa23_data.csv')
 
     with st.form(key='params_for_api'):
         st.header('Player Choice')
