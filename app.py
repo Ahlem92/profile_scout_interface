@@ -9,21 +9,28 @@ from streamlit_extras.function_explorer import function_explorer
 from streamlit_extras.app_logo import add_logo
 
 
-st.title("_PROFILE SCOUT_ :soccer:")
-
-
-
 def page_profile():
+
+    st.title("_PROFILE SCOUT_ :soccer:")
+
     df = pd.read_csv('Fifa23_data (1).csv')
-    with st.sidebar:
-        with st.form(key='params_for_api'):
-            player_name = st.selectbox('Select a player', df['Full Name'])
-            number_of_similar_profiles = st.number_input('Number of similar player', 5)
 
-            submit_button = st.form_submit_button(label ='Get Similar Players')
+    with st.form(key='params_for_api'):
+        st.header('Player Choice')
+        player_name = st.selectbox('Select a player', df['Full Name'])
+        number_of_similar_profiles = st.number_input('Number of similar player', 5)
+
+        # st.header('Selection Criteria')
+        # criteria = ["None", "Value(in Euro)", "Nationality", "Age", "Height", "Release Clause", "Contract Until"]
 
 
+        # filter_1 = st.selectbox('Select Criteria', criteria)
+        # if filter_1 != None :
 
+        # filter_2 = st.selectbox('Select Criteria', criteria)
+        # filter_3 = st.selectbox('Select Criteria', criteria)
+
+        submit_button = st.form_submit_button(label ='Get Similar Players')
 
     if submit_button:
         params = dict(
@@ -39,10 +46,20 @@ def page_profile():
         df = df2.T
         select = ['Similar Players','Value(in Euro)',"Positions Played", 'Best Position', 'Image Link','Age','Club Name','Contract Until','National Team Image Link', ]
 
+        # # Filtre 1
+        # if filter_1 != 'None' :
+        #     df = None
+
+        # # Filtre 2
+        # if filter_2 != 'None' :
+        #     df = None
+
+        # # Filtre 3
+        # if filter_3 != 'None' :
+        #     df = None
+
         py_results = df[select]
 
-        st.header(f'Here are {number_of_similar_profiles} Similar players of {player_name}')
-        st.write(py_results)
 
         st.header(py_results.index[0])
         col1, col2, col3 = st.columns([1, 1, 2])
@@ -53,16 +70,21 @@ def page_profile():
         with col2:
             st.write(py_results["Positions Played"].loc[py_results.index[0]])
             st.write(py_results["Best Position"].loc[py_results.index[0]])
-            st.image(py_results['National Team Image Link'].loc[py_results.index[0]])
+            if py_results['National Team Image Link'].loc[py_results.index[0]]!= '-':
+                st.image(py_results['National Team Image Link'].loc[py_results.index[0]])
+            else:
+                st.write('No national team')
 
         with col3:
             st.write(py_results["Age"].loc[py_results.index[0]])
             st.write(py_results["Club Name"].loc[py_results.index[0]])
             st.write(py_results['Contract Until'].loc[py_results.index[0]])
 
+        st.header(f'Here are {number_of_similar_profiles} Similar players of {player_name}')
+
         for i in range(1, number_of_similar_profiles+1):
             st.subheader(py_results.index[i])
-            col1, col2, col3 = st.columns([1, 1, 2])
+            col1, col2, col3, col4 = st.columns([1, 1, 2,1])
 
             with col1:
                 st.write(f'{py_results["Value(in Euro)"].loc[py_results.index[i]]} €')
@@ -71,16 +93,25 @@ def page_profile():
             with col2:
                 st.write(py_results["Positions Played"].loc[py_results.index[i]])
                 st.write(py_results["Best Position"].loc[py_results.index[i]])
-                st.image(py_results['National Team Image Link'].loc[py_results.index[i]])
+                if py_results['National Team Image Link'].loc[py_results.index[i]]!= '-':
+                    st.image(py_results['National Team Image Link'].loc[py_results.index[i]])
+                else:
+                    st.write('No national team')
 
             with col3:
                 st.write(py_results["Age"].loc[py_results.index[i]])
                 st.write(py_results["Club Name"].loc[py_results.index[i]])
                 st.write(py_results['Contract Until'].loc[py_results.index[i]])
 
-        button = st.button("Nouvelle recherche")
-        if button :
-            page_profile()
+            with col4:
+                pourcentage = py_results['Similar Players'].loc[py_results.index[i]]*100
+                st.write(f'{round(pourcentage, 1)} %')
+
+            st.markdown('-----------------')
+
+        # button = st.button("Nouvelle recherche")
+        # if button :
+        #     page_profile()
 
             #st.image()
             #st.write(f"{player_name}")
