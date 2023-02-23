@@ -13,22 +13,20 @@ def page_profile():
 
     st.title("_PROFILE SCOUT_ :soccer:")
 
-    df = pd.read_csv('Fifa23_data (1).csv')
+    df = pd.read_csv('Fifa23_data.csv')
 
     with st.form(key='params_for_api'):
         st.header('Player Choice')
-        player_name = st.selectbox('Select a player', df['Full Name'])
-        number_of_similar_profiles = st.number_input('Number of similar player', 5)
+        player_name = st.selectbox('Select a player :', df['Full Name'], key = 'player')
+        number_of_similar_profiles = st.number_input('Number of similar player :', 5)
 
-        # st.header('Selection Criteria')
-        # criteria = ["None", "Value(in Euro)", "Nationality", "Age", "Height", "Release Clause", "Contract Until"]
+        st.header('Selection Criteria')
+        criteria = ["None", "Value(in Euro)", "Nationality", "Age", "Height", "Release Clause", "Contract Until"]
 
 
-        # filter_1 = st.selectbox('Select Criteria', criteria)
-        # if filter_1 != None :
-
-        # filter_2 = st.selectbox('Select Criteria', criteria)
-        # filter_3 = st.selectbox('Select Criteria', criteria)
+        filter_1 = st.selectbox('Select Criteria :', criteria, key = 'criteria1')
+        filter_2 = st.selectbox('Select Criteria', criteria, key = 'criteria2')
+        filter_3 = st.selectbox('Select Criteria', criteria, key = 'criteria3')
 
         submit_button = st.form_submit_button(label ='Get Similar Players')
 
@@ -45,6 +43,21 @@ def page_profile():
         df2 = pd.read_json(json.dumps(results), orient ='index')
         df = df2.T
         select = ['Similar Players','Value(in Euro)',"Positions Played", 'Best Position', 'Image Link','Age','Club Name','Contract Until','National Team Image Link', ]
+
+        if filter_1 != None :
+            st.session_state["filter_1"] = filter_1
+            if filter_1 == 'Value(in Euro)':
+                st.session_state['value_euro'] = st.number_input('Select a budget :', key = 'budget')
+            elif filter_1 == 'Age' or filter_1 == 'Contract Until' or filter_1 == 'Height':
+                st.write(f"Select {filter_1} :")
+                value_1 = st.slider(min(df[filter_1]), max(df[filter_1]), 1, key = f'{filter_1}')
+            elif filter_1 == 'Release Clause':
+                st.number_input('Select Release Clause :', key = 'rc')
+            elif filter_1 == 'Nationality' :
+                value_1 = st.selectbox('Select a Nationality :', df['Nationality'].unique(), key = 'nation')
+
+        st.write(st.session_state.value_euro)
+        st.write(st.session_state.filter_1)
 
         # # Filtre 1
         # if filter_1 != 'None' :
@@ -108,33 +121,6 @@ def page_profile():
                 st.write(f'{round(pourcentage, 1)} %')
 
             st.markdown('-----------------')
-
-        # button = st.button("Nouvelle recherche")
-        # if button :
-        #     page_profile()
-
-            #st.image()
-            #st.write(f"{player_name}")
-            #st.write(position)
-            # st.image(e)
-
-    #for n in df["Club Name", "Image Link"]:
-        #st.write(n)
-        #st.image(n)
-
-    #player_name: str, value: float, position: str,
-        #data_player = pd.json_normalize(results)
-        #Add a logo (optional) in the sidebar
-    #logo = Image.open(r'C:\Users\13525\Desktop\Insights_Bees_logo.png')
-    #st.sidebar.image(logo,  width=120)
-
-    #Add the expander to provide some information about the app
-    #with st.sidebar.expander("About the App"):
-        # st.write("""
-        #  This data profiling App was built by My Data Talk using Streamlit and pandas_profiling package. You can use the app to quickly generate a comprehensive data profiling and EDA report without the need to write any python code. \n\nThe app has the minimum mode (recommended) and the complete code. The complete code includes more sophisticated analysis such as correlation analysis or interactions between variables which may requires expensive computations. )
-        # """)
-
-    # [url=https://logovtor.com/le-wagon-logo-vector-svg/][img]https://logovtor.com/wp-content/uploads/2020/10/le-wagon-logo-vector.png[/img][/url]
 
 if __name__ == "__main__":
     page_profile()
