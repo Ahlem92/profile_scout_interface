@@ -9,7 +9,7 @@ import numpy as np
 
 def page_profile():
 
-    st.markdown("<h1 style='text-align: center;'> <i>pROFILE SCOUT</i> &#x26BD</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'> <i>PROFILE SCOUT</i> &#x26BD</h1>", unsafe_allow_html=True)
     st.markdown('<p><strong>Done by :</strong> <span style="color:Blue;">Alhem Belko</span>, <span style="color:Blue;">Ali Jamal Eddine</span>, <span style="color:Blue;">Romain Lecocq</span> et <span style="color:Blue;">Alix Macgregor</span></p>', unsafe_allow_html=True)
 
     df = pd.read_csv('Fifa23_data.csv')
