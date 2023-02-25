@@ -4,9 +4,6 @@ import requests
 import pandas as pd
 import json
 from pandas import json_normalize
-from streamlit_extras.function_explorer import function_explorer
-
-from streamlit_extras.app_logo import add_logo
 
 
 def page_profile():
@@ -15,13 +12,25 @@ def page_profile():
 
     df = pd.read_csv('Fifa23_data.csv')
 
-    with st.form(key='params_for_api'):
+    with st.form(key='params_for_api'   ):
         st.header('Player Choice')
         player_name = st.selectbox('Select a player', df['Full Name'])
         number_of_similar_profiles = st.number_input('Number of similar player', 5)
+        submit_button = st.form_submit_button(label ='Get Similar Players')
+        st.header('Selection Criteria')
+        criteria = [ "Value(in Euro)", "Nationality", "Age", "Height(in cm)", "Release Clause", "Contract Until"]
 
-        # st.header('Selection Criteria')
-        # criteria = ["None", "Value(in Euro)", "Nationality", "Age", "Height", "Release Clause", "Contract Until"]
+        if st.multiselect("Nationality", df["Nationality"].unique().tolist(), key="Nationality"):
+            df = df[df["Nationality"].isin(df["Nationality"].unique())]
+            df = df.query("Nationality ==@Nationality")
+
+        if st.select_slider("Maximum Age", df["Age"].unique().tolist(), key="Age"):
+            df = df.query("Age <=@Age")
+
+
+
+
+
 
 
         # filter_1 = st.selectbox('Select Criteria', criteria)
@@ -30,7 +39,6 @@ def page_profile():
         # filter_2 = st.selectbox('Select Criteria', criteria)
         # filter_3 = st.selectbox('Select Criteria', criteria)
 
-        submit_button = st.form_submit_button(label ='Get Similar Players')
 
     if submit_button:
         params = dict(
@@ -59,6 +67,7 @@ def page_profile():
         #     df = None
 
         py_results = df[select]
+        py_results["Value(in Euro)"]= py_results["Value(in Euro)"].map('{:,.0f}'.format)
 
 
         st.header(py_results.index[0])
