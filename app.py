@@ -36,7 +36,7 @@ def page_profile():
             liste_h = list(np.linspace(min(df['Height(in cm)']), max(df['Height(in cm)']), max(df['Height(in cm)'])-min(df['Height(in cm)'])+1, dtype=int))
             liste_h.sort()
             liste_h.insert(0, None)
-            height = st.selectbox('Select Age', liste_h, key = 'height')
+            height = st.selectbox('Select Height', liste_h, key = 'height')
 
             # Contract Until
             liste_cu = list(np.linspace(2023, 2050, 28, dtype=int))
