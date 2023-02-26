@@ -5,7 +5,7 @@ import pandas as pd
 import json
 import numpy as np
 
-
+import streamlit.components.v1 as components
 
 def page_profile():
 
@@ -97,10 +97,16 @@ def page_profile():
             else :
                 st.write(f'Value : {player["Value(in Euro)"].loc[player.index[0]]} €')
 
-            st.image(player['Image Link'].loc[player.index[0]], width=70)
-
+            get_url = requests.get(player['Image Link'].loc[player.index[0]])
+            if get_url.status_code == 200 :
+                st.image(player['Image Link'].loc[player.index[0]], width=70)
+            else :
+                st.image(default_image, width=70)
         with col_sep1 :
+            st.markdown('| \n |')
             st.markdown('|')
+            st.markdown('|')
+            # components.html("""<hr> <\hr>""", width=1, height=100)
 
         with col2:
             st.write(f'Best Position : {player["Best Position"].loc[player.index[0]]}')
@@ -138,7 +144,11 @@ def page_profile():
                         st.write(f'Value : {int(py_results["Value(in Euro)"].loc[py_results.index[i]]/1000)}K €')
                     else :
                         st.write(f'Value : {py_results["Value(in Euro)"].loc[py_results.index[i]]} €')
-                    st.image(py_results['Image Link'].loc[py_results.index[i]], width=70)
+                    get_url = requests.get(py_results['Image Link'].loc[py_results.index[i]])
+                    if get_url.status_code == 200 :
+                        st.image(py_results['Image Link'].loc[py_results.index[i]], width=70)
+                    else :
+                        st.image(default_image, width=70)
 
                 with col2:
                     st.write(f'Positions played : {py_results["Positions Played"].loc[py_results.index[i]]}')
@@ -160,5 +170,5 @@ if __name__ == "__main__":
 
 
 ### Chose qu'il reste à faire :
+#       - fair un message de présentation
 #       - séparer les colonnes
-#       - mettre une image par défaut pour les players qui ont pas de photos
