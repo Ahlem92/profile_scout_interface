@@ -7,12 +7,41 @@ import numpy as np
 
 import streamlit.components.v1 as components
 
+import base64
+
+# @st.cache_resource
+# def load_image(path):
+#     with open(path, 'rb') as f:
+#         data = f.read()
+#     encoded = base64.b64encode(data).decode()
+#     return encoded
+
+# def image_tag(path):
+#     encoded = load_image(path)
+#     tag = f'<img src="data:image/png;base64,{encoded}">'
+#     return tag
+
+# def background_image_style(path):
+#     encoded = load_image(path)
+#     style = f'''
+#     <style>
+#     .stApp {{
+#         background-image: url("data:image/png;base64,{encoded}");
+#         background-size: cover;
+#     }}
+#     </style>
+#     '''
+#     return style
+
 def page_profile():
 
     st.markdown("<h1 style='text-align: center;'> <i>PROFILE SCOUT</i> &#x26BD</h1>", unsafe_allow_html=True)
     st.markdown('<p><strong>Done by :</strong> <span style="color:Blue;">Alhem Belko</span>, <span style="color:Blue;">Ali Jamal Eddine</span>, <span style="color:Blue;">Romain Lecocq</span> et <span style="color:Blue;">Alix Macgregor</span></p>', unsafe_allow_html=True)
 
     df = pd.read_csv('Fifa23_data.csv')
+    # image_path = 'foot.png'
+
+    # st.write(background_image_style(image_path), unsafe_allow_html=True)
 
     with st.sidebar :
         with st.form(key='params_for_api'):
@@ -68,8 +97,6 @@ def page_profile():
         nationality = nationality,
         value_euro = value_euro)
 
-
-        # profile_scout_api_url = 'https://profile-scout-snwo4rgu6a-ew.a.run.app/get_profiles?player_name=Lionel%20Messi&number_of_similar_profiles=10'
         profile_scout_api_url = 'https://profile-scout-snwo4rgu6a-ew.a.run.app/get_profiles'
         response = requests.get(profile_scout_api_url
                                 , params=params)
@@ -85,9 +112,8 @@ def page_profile():
         player = player[select]
 
         default_image = 'https://www.pngkit.com/png/detail/126-1262807_instagram-default-profile-picture-png.png'
-        # st.image(f'<img src={player["Image Link"]} onerror="this.onerror=null;this.src={default_image};" />', unsafe_allow_html= True)
-
         st.header(player_name)
+
         col1, col_sep1, col2, col_sep2, col3 = st.columns([2, 1, 3, 1, 3])
         with col1:
             if player['Value(in Euro)'].loc[player.index[0]]//1000000 != 0 :
@@ -103,15 +129,15 @@ def page_profile():
             else :
                 st.image(default_image, width=70)
         with col_sep1 :
-            st.markdown('| \n |')
-            st.markdown('|')
-            st.markdown('|')
-            # components.html("""<hr> <\hr>""", width=1, height=100)
+            st.write('')
 
         with col2:
             st.write(f'Best Position : {player["Best Position"].loc[player.index[0]]}')
             st.write(f'Club : {player["Club Name"].loc[player.index[0]]}')
             st.write(f'Contract Until : {player["Contract Until"].loc[player.index[0]]}')
+
+            with col_sep2 :
+                st.write('')
 
         with col3:
             st.write(f'Age : {player["Age"].loc[player.index[0]]}')
@@ -135,7 +161,7 @@ def page_profile():
 
                 st.subheader(py_results.index[i])
                 st.text(f'Similarity : {round(pourcentage, 1)} %')
-                col1, col2, col3 = st.columns([2, 4, 3])
+                col1, col_sep1, col2, col_sep2, col3 = st.columns([2, 1, 3, 1, 3])
 
                 with col1:
                     if py_results['Value(in Euro)'].loc[py_results.index[i]]//1000000 != 0 :
@@ -150,10 +176,16 @@ def page_profile():
                     else :
                         st.image(default_image, width=70)
 
+                with col_sep1 :
+                    st.write('')
+
                 with col2:
                     st.write(f'Positions played : {py_results["Positions Played"].loc[py_results.index[i]]}')
                     st.write(f'Club : {py_results["Club Name"].loc[py_results.index[i]]}')
                     st.write(f'Contract Until : {py_results["Contract Until"].loc[py_results.index[i]]}')
+
+                with col_sep2 :
+                    st.write('')
 
                 with col3:
                     st.write(f'Age : {py_results["Age"].loc[py_results.index[i]]}')
@@ -163,7 +195,11 @@ def page_profile():
                     else:
                         st.write('No national team')
 
-                st.markdown('-----------------')
+                st.markdown('----')
+
+        # nouvelle_recherche = st.button(label='Nouvelle Recherche')
+        # if nouvelle_recherche :
+        #     page_profile()
 
 if __name__ == "__main__":
     page_profile()
