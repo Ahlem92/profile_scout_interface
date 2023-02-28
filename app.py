@@ -36,7 +36,7 @@ import base64
 def page_profile():
 
     st.markdown("<h1 style='text-align: center;'> <i>PROFILE SCOUT</i> &#x26BD</h1>", unsafe_allow_html=True)
-    st.markdown('<p><strong>Done by :</strong> <span style="color:Blue;">Alhem Belko</span>, <span style="color:Blue;">Ali Jamal Eddine</span>, <span style="color:Blue;">Romain Lecocq</span> et <span style="color:Blue;">Alix Macgregor</span></p>', unsafe_allow_html=True)
+    st.markdown('Message')
 
     df = pd.read_csv('Fifa23_data.csv')
     # image_path = 'foot.png'
@@ -45,7 +45,7 @@ def page_profile():
 
     with st.sidebar :
         with st.form(key='params_for_api'):
-            st.header('Player Choice')
+            st.header('Reference Player')
             player_name = st.selectbox('Select a player :', df['Full Name'], key = 'player')
             number_of_similar_profiles = st.number_input('Number of similar player :', 5)
 
@@ -59,13 +59,13 @@ def page_profile():
             # Age
             liste_a = list(np.linspace(min(df['Age']), max(df['Age']), max(df['Age'])-min(df['Age'])+1, dtype=int))
             liste_a.insert(0, None)
-            age = st.selectbox('Select Age', liste_a, key = 'age')
+            age = st.selectbox('Select Maximum Age', liste_a, key = 'age')
 
             # Height
             liste_h = list(np.linspace(min(df['Height(in cm)']), max(df['Height(in cm)']), max(df['Height(in cm)'])-min(df['Height(in cm)'])+1, dtype=int))
             liste_h.sort()
             liste_h.insert(0, None)
-            height = st.selectbox('Select Height', liste_h, key = 'height')
+            height = st.selectbox('Select Minimum Height', liste_h, key = 'height')
 
             # Contract Until
             liste_cu = list(np.linspace(2023, 2050, 28, dtype=int))
@@ -75,7 +75,7 @@ def page_profile():
             # Release Clause
             liste_rc = [0, 1000, 10000, 50000] + list(np.linspace(100000, 900000, 9, dtype = int)) + list(np.linspace(1000000, 50000000, 50, dtype = int)) + list(np.linspace(50000000, 400000000, 80, dtype=int))
             liste_rc.insert(0, None)
-            release_clause = st.selectbox('Select Release Clause', liste_rc, key = 'release_clause')
+            release_clause = st.selectbox('Select Maximum Release Clause', liste_rc, key = 'release_clause')
 
             # Nationality
             liste = list(df['Nationality'].unique())
