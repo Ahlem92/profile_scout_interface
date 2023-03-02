@@ -4,6 +4,7 @@ import requests
 import pandas as pd
 import json
 import numpy as np
+import time
 
 import streamlit.components.v1 as components
 
@@ -35,8 +36,9 @@ import base64
 
 def page_profile():
 
-    st.markdown("<h1 style='text-align: center;'> <i>PROFILE SCOUT</i> &#x26BD</h1>", unsafe_allow_html=True)
-    st.markdown('Message')
+
+    st.markdown("<h1 style='text-align: center;'> &#x26BD <i>PROFILE SCOUT</i> &#x26BD</h1>", unsafe_allow_html=True)
+    st.caption("This website will allow you to choose a reference player and obtain similar players respecting chosen criterias ")
 
     df = pd.read_csv('Fifa23_data.csv')
     # image_path = 'foot.png'
@@ -44,6 +46,7 @@ def page_profile():
     # st.write(background_image_style(image_path), unsafe_allow_html=True)
 
     with st.sidebar :
+
         with st.form(key='params_for_api'):
             st.header('Reference Player')
             player_name = st.selectbox('Select a player :', df['Full Name'], key = 'player')
@@ -86,6 +89,15 @@ def page_profile():
             submit_button = st.form_submit_button(label ='Get Similar Players')
 
     if submit_button:
+
+        progress_text = "Operation in progress. Please wait while we look for the best matches!"
+        my_bar = st.progress(0, text=progress_text)
+
+        for percent_complete in range(100):
+            time.sleep(0.1)
+            my_bar.progress(percent_complete + 1, text=progress_text)
+
+        my_bar.empty()
 
         params = dict(
         player_name = player_name,
@@ -154,7 +166,7 @@ def page_profile():
             if py_results.shape[0]!= number_of_similar_profiles :
                 st.subheader(f'There are only {py_results.shape[0]} similar players with these criterias')
             else :
-                st.header(f'Here are {py_results.shape[0]} Similar players to {player_name}')
+                st.header(f'Here are {py_results.shape[0]} Similar players to {player_name} !')
 
             for i in range(py_results.shape[0]):
                 pourcentage = py_results['Similar Players'].loc[py_results.index[i]]*100
@@ -196,15 +208,8 @@ def page_profile():
                         st.write('No national team')
 
                 st.markdown('----')
+        st.caption("Feel free to select a new player or change the criterias")
 
-        # nouvelle_recherche = st.button(label='Nouvelle Recherche')
-        # if nouvelle_recherche :
-        #     page_profile()
 
 if __name__ == "__main__":
     page_profile()
-
-
-### Chose qu'il reste à faire :
-#       - fair un message de présentation
-#       - séparer les colonnes
