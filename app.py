@@ -37,7 +37,8 @@ import base64
 def page_profile():
 
 
-    st.markdown("<h1 style='text-align: center;'> <i> &#x26BD PROFILE SCOUT</i> &#x26BD</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'> &#x26BD <i>PROFILE SCOUT</i> &#x26BD</h1>", unsafe_allow_html=True)
+    st.caption("This website will allow you to choose a reference player and obtain similar players respecting chosen criterias ")
 
     df = pd.read_csv('Fifa23_data.csv')
     # image_path = 'foot.png'
@@ -45,9 +46,6 @@ def page_profile():
     # st.write(background_image_style(image_path), unsafe_allow_html=True)
 
     with st.sidebar :
-        st.header(":soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer:")
-        st.subheader('Please enter a reference player and our algorithm will return the desired number of similar profiles matching the criterias you select')
-        st.header(":soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer::soccer:")
         with st.form(key='params_for_api'):
             st.header('Reference Player')
             player_name = st.selectbox('Select a player :', df['Full Name'], key = 'player')
@@ -209,13 +207,8 @@ def page_profile():
                         st.write('No national team')
 
                 st.markdown('----')
-        st.subheader("You can use the sidebar on the left again if you want to narrow your research or if you want to have a go with another player")
+        st.caption("Feel free to select a new player or change the criterias")
 
 
 if __name__ == "__main__":
     page_profile()
-
-
-### Chose qu'il reste à faire :
-#       - fair un message de présentation
-#       - séparer les colonnes
