@@ -53,7 +53,7 @@ def page_profile():
 
             st.header('Selection Criteria')
             # Value in Euro
-            liste_ve = [0, 1000, 10000, 50000] + list(np.linspace(100000, 900000, 9, dtype = int)) + list(np.linspace(1000000, 50000000, 50, dtype = int)) + list(np.linspace(50000000, 200000000, 40, dtype=int))
+            liste_ve = [0, 1000, 10000, 50000] + list(range(100000, 1000000,100000))+ list(range(1000000, 51000000,1000000))+ list(range(55000000, 205000000,5000000))
             liste_ve.sort()
             liste_ve.insert(0, None)
             value_euro = st.selectbox('Select a budget :', liste_ve, key = 'budget')
